@@ -1,7 +1,8 @@
 import cors, { CorsOptions } from 'cors'
-import express, { NextFunction, Request, Response } from 'express'
+import express, { Request, Response } from 'express'
 import morgan from 'morgan'
-import { routes } from './routes/auth'
+import { errorHandler } from './middleware/errorHandler'
+import { authRouter } from './routes/auth'
 
 const expressPort = process.env.PORT || 8888
 const app = express()
@@ -33,12 +34,8 @@ app.get('/', (req: Request, res: Response) => {
   res.send('INFO :: Root route called')
 })
 
-routes(app)
-
-app.use(function (err: any, req: Request, res: Response, next: NextFunction) {
-  console.error(err)
-  res.status(500).send(err.message)
-})
+app.use('/api/auth', authRouter)
+app.use(errorHandler)
 
 app.listen(expressPort, () => {
   console.log('INFO :: Webserver started on port ' + expressPort)

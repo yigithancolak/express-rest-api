@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import { registerValidation } from '../validation/register.validation'
 
-export const Register = (req: Request, res: Response) => {
+export const registerUser = (req: Request, res: Response) => {
   const body = req.body
 
   const { error } = registerValidation.validate(body)
