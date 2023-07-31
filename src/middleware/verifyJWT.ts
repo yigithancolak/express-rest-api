@@ -5,11 +5,7 @@ import jwt, { JwtPayload } from 'jsonwebtoken'
 config()
 
 export interface RequestWithUser extends Request {
-  user: string
-}
-
-interface PayloadWithUsername extends JwtPayload {
-  username: string
+  user: JwtPayload
 }
 
 export const verifyJWT = (
@@ -19,12 +15,14 @@ export const verifyJWT = (
 ) => {
   const authHeader = req.headers['authorization']
   if (!authHeader) return res.sendStatus(401)
-  console.log(authHeader) // Bearer token
   const token = authHeader.split(' ')[1]
-  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET!, (err, decoded) => {
-    if (err) return res.sendStatus(403) //invalid token
-    const payload = decoded as PayloadWithUsername
-    req.user = payload.username
-    next()
-  })
+  jwt.verify(
+    token,
+    process.env.ACCESS_TOKEN_SECRET!,
+    (err, user: JwtPayload) => {
+      if (err) return res.sendStatus(403) //invalid token
+      req.user = user
+      next()
+    }
+  )
 }
