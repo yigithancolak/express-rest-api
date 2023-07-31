@@ -1,28 +1,15 @@
-import cors, { CorsOptions } from 'cors'
+import cors from 'cors'
 import express, { Request, Response } from 'express'
 import morgan from 'morgan'
+import { corsOptions } from '../config/corsOptions'
 import { errorHandler } from './middleware/errorHandler'
 import { authRouter } from './routes/auth'
 
 const expressPort = process.env.PORT || 8888
 const app = express()
 
+//middleware for form data
 app.use(express.urlencoded({ extended: false }))
-
-const whitelist = ['www.mydeploymentlink.com', 'http://localhost:8888']
-
-const corsOptions: CorsOptions = {
-  origin: (origin, callback) => {
-    //after development || !origin will be removed
-    if (whitelist.indexOf(origin!) !== -1 || !origin) {
-      callback(null, true)
-    } else {
-      callback(new Error('Not allowed by CORS'))
-    }
-  },
-  optionsSuccessStatus: 200
-}
-
 //for logs
 app.use(morgan('dev'))
 // use json for API routes
@@ -34,7 +21,10 @@ app.get('/', (req: Request, res: Response) => {
   res.send('INFO :: Root route called')
 })
 
+//routes
 app.use('/api/auth', authRouter)
+
+//handling errors with middleware
 app.use(errorHandler)
 
 app.listen(expressPort, () => {
