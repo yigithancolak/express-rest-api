@@ -1,12 +1,7 @@
-import { Router } from 'express'
-import {
-  handleUserLogin,
-  handleUserRegister
-} from '../controller/auth.controller'
+import express from 'express'
+import { registerUser } from '../controller/authController'
 
-//   /auth/*
-export const authRouter = Router()
-
-authRouter.post('/register', handleUserRegister)
-
-authRouter.get('/login', handleUserLogin)
+export default (router: express.Router) => {
+  router.post('/auth/register', registerUser)
+  // router.post('/auth/login', login);
+}

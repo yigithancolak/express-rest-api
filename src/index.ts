@@ -1,20 +1,26 @@
+import compression from 'compression'
+import cookieParser from 'cookie-parser'
 import cors from 'cors'
+import { config } from 'dotenv'
 import express, { Request, Response } from 'express'
+import mongoose from 'mongoose'
 import morgan from 'morgan'
-import { corsOptions } from '../config/corsOptions'
+import { corsOptions } from './config/corsOptions'
+
 import { errorHandler } from './middleware/errorHandler'
-import { authRouter } from './routes/auth'
+import router from './routes'
 
 const expressPort = process.env.PORT || 8888
 const app = express()
 
-//middleware for form data
+config()
+
+//middlewares
+app.use(compression())
+app.use(cookieParser())
 app.use(express.urlencoded({ extended: false }))
-//for logs
 app.use(morgan('dev'))
-// use json for API routes
 app.use(express.json())
-// cors for api address/port
 app.use(cors(corsOptions))
 
 app.get('/', (req: Request, res: Response) => {
@@ -22,7 +28,8 @@ app.get('/', (req: Request, res: Response) => {
 })
 
 //routes
-app.use('/api/auth', authRouter)
+// app.use('/api/auth', authRouter)
+app.use('/api', router())
 
 //handling errors with middleware
 app.use(errorHandler)
@@ -30,3 +37,7 @@ app.use(errorHandler)
 app.listen(expressPort, () => {
   console.log('INFO :: Webserver started on port ' + expressPort)
 })
+
+mongoose.Promise = Promise
+mongoose.connect(process.env.MONGO_URL)
+mongoose.connection.on('error', (error: Error) => console.log(error))
