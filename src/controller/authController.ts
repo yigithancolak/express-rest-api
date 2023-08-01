@@ -7,7 +7,7 @@ import { hashPassword } from '../helpers'
 
 config()
 
-export const registerUser = async (req: Request, res: Response) => {
+export const handleRegisterUser = async (req: Request, res: Response) => {
   try {
     const { email, password, username } = req.body
 
@@ -37,7 +37,7 @@ export const registerUser = async (req: Request, res: Response) => {
   }
 }
 
-export const loginUser = async (req: Request, res: Response) => {
+export const handleLoginUser = async (req: Request, res: Response) => {
   const { email, password } = req.body
 
   if (!email || !password)

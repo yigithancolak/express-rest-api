@@ -24,16 +24,12 @@ export const handleRefreshToken = async (req: Request, res: Response) => {
         '+authentication.refreshToken'
       )
 
-      console.log('REFRESH: ', refreshToken)
-      console.log('USER: ', user)
-
       // Check if the refresh token in the database matches the one sent by the client
       if (user && user.authentication.refreshToken === refreshToken) {
         // Generate a new access token
-        const userObject = user.toObject()
-        delete userObject.authentication // Remove authentication details from the response
+        const { authentication, ...userWithoutAuth } = user.toObject()
         const accessToken = jwt.sign(
-          userObject,
+          userWithoutAuth,
           process.env.ACCESS_TOKEN_SECRET!,
           { expiresIn: '15m' }
         )
