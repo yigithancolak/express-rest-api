@@ -5,7 +5,8 @@ const UserSchema = new mongoose.Schema({
   email: { type: String, required: true },
   authentication: {
     password: { type: String, required: true, select: false },
-    sessionToken: { type: String, select: false }
+    accessToken: { type: String, select: false },
+    refreshToken: { type: String, select: false }
   },
   createdAt: { type: Date, default: () => Date.now(), immutable: true },
   updatedAt: { type: Date, default: () => Date.now() }

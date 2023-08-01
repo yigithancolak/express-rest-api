@@ -71,6 +71,10 @@ export const loginUser = async (req: Request, res: Response) => {
       { expiresIn: '30d' }
     )
 
+    // Save the refresh token to the user's document
+    user.authentication.refreshToken = refreshToken
+    await user.save()
+
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production', // set to true if in a production environment
@@ -78,9 +82,10 @@ export const loginUser = async (req: Request, res: Response) => {
       maxAge: 30 * 24 * 60 * 60 * 1000 // cookie expiration in milliseconds
     })
 
-    return res
-      .status(200)
-      .json({ success: true, data: { ...userObject, accessToken } })
+    return res.status(200).json({
+      success: true,
+      data: { ...userObject, authentication: { accessToken, refreshToken } }
+    })
   } catch (error) {
     res.status(500).json(error.message)
   }
