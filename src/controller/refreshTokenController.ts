@@ -1,10 +1,7 @@
-import { config } from 'dotenv'
 import { Request, Response } from 'express'
 import jwt from 'jsonwebtoken'
 import { getUserById } from '../db/operations/userOperations'
 import { UserJWT } from '../helpers/jwtHelpers'
-
-config()
 
 export const handleRefreshToken = async (req: Request, res: Response) => {
   const refreshToken = req.cookies?.refreshToken

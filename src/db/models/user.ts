@@ -1,5 +1,7 @@
 import mongoose, { Types } from 'mongoose'
 
+export type RolesType = 'user' | 'admin'
+
 export interface IUser {
   _id: Types.ObjectId
   username: string
@@ -9,7 +11,7 @@ export interface IUser {
     accessToken?: string
     refreshToken?: string
   }
-  role: string
+  role: RolesType
   createdAt: Date
   updatedAt: Date
 }
@@ -22,7 +24,7 @@ const UserSchema = new mongoose.Schema({
     accessToken: { type: String, select: false },
     refreshToken: { type: String, select: false }
   },
-  role: { type: String, default: 'user' },
+  role: { type: String, enum: ['user', 'admin'], default: 'user' },
   createdAt: { type: Date, default: () => Date.now(), immutable: true },
   updatedAt: { type: Date, default: () => Date.now() }
 })

@@ -1,12 +1,9 @@
 import bcrypt from 'bcrypt'
-import { config } from 'dotenv'
 import { Request, Response } from 'express'
 import jwt from 'jsonwebtoken'
 import { createUser, getUserByEmail } from '../db/operations/userOperations'
 import { hashPassword } from '../helpers'
 import createTokenPayload from '../helpers/jwtHelpers'
-
-config()
 
 export const handleRegisterUser = async (req: Request, res: Response) => {
   try {

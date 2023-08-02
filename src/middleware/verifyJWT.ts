@@ -1,9 +1,6 @@
-import { config } from 'dotenv'
 import { NextFunction, Request, Response } from 'express'
 import jwt from 'jsonwebtoken'
 import { UserJWT } from '../helpers/jwtHelpers'
-
-config()
 
 export interface RequestWithUser extends Request {
   user: UserJWT

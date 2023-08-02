@@ -6,14 +6,13 @@ import express, { Request, Response } from 'express'
 import mongoose from 'mongoose'
 import morgan from 'morgan'
 import { corsOptions } from './config/corsOptions'
-
 import { errorHandler } from './middleware/errorHandler'
 import router from './routes'
 
+config()
+
 const expressPort = process.env.PORT || 8888
 const app = express()
-
-config()
 
 //middlewares
 app.use(compression())
