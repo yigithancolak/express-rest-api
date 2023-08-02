@@ -1,5 +1,5 @@
 import { NextFunction, Response } from 'express'
-import { RolesType } from '../db/models/user'
+import { RolesType } from '../db/models/User'
 import { RequestWithUser } from './verifyJWT'
 
 export const verifyRole = (role: RolesType) => {

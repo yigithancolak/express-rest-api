@@ -1,7 +1,7 @@
 // const tokenPayload = { id: user._id, role: user.role }; // Customize based on your needs
 
 import { Types } from 'mongoose'
-import { IUser } from '../db/models/user'
+import { IUser } from '../db/models/User'
 
 export type UserJWT = {
   id: Types.ObjectId

@@ -16,7 +16,7 @@ export interface IUser {
   updatedAt: Date
 }
 
-const UserSchema = new mongoose.Schema({
+const userSchema = new mongoose.Schema({
   username: { type: String, required: true },
   email: { type: String, required: true },
   authentication: {
@@ -29,4 +29,4 @@ const UserSchema = new mongoose.Schema({
   updatedAt: { type: Date, default: () => Date.now() }
 })
 
-export const UserModel = mongoose.model('User', UserSchema)
+export const UserModel = mongoose.model('User', userSchema)

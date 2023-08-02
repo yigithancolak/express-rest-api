@@ -5,11 +5,13 @@ import { config } from 'dotenv'
 import express, { Request, Response } from 'express'
 import mongoose from 'mongoose'
 import morgan from 'morgan'
+import { connectDB } from './config/connectDB'
 import { corsOptions } from './config/corsOptions'
 import { errorHandler } from './middleware/errorHandler'
 import router from './routes'
 
 config()
+connectDB()
 
 const expressPort = process.env.PORT || 8888
 const app = express()
@@ -33,10 +35,14 @@ app.use('/api', router())
 //handling errors with middleware
 app.use(errorHandler)
 
-app.listen(expressPort, () => {
-  console.log('INFO :: Webserver started on port ' + expressPort)
+mongoose.connection.once('open', () => {
+  app.listen(expressPort, () => {
+    console.log('INFO :: Webserver started on port ' + expressPort)
+  })
 })
 
-mongoose.Promise = Promise
-mongoose.connect(process.env.MONGO_URL)
-mongoose.connection.on('error', (error: Error) => console.log(error))
+// mongoose.Promise = Promise
+// mongoose.connect(process.env.MONGO_URL,{
+
+// })
+// mongoose.connection.on('error', (error: Error) => console.log(error))
