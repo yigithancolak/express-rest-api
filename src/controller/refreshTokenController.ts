@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import jwt from 'jsonwebtoken'
 import { getUserById } from '../db/operations/userOperations'
-import { UserJWT } from '../helpers/jwtHelpers'
+import createTokenPayload, { UserJWT } from '../helpers/jwtHelpers'
 
 export const handleRefreshToken = async (req: Request, res: Response) => {
   const refreshToken = req.cookies?.refreshToken
@@ -25,9 +25,9 @@ export const handleRefreshToken = async (req: Request, res: Response) => {
       // Check if the refresh token in the database matches the one sent by the client
       if (user && user.authentication.refreshToken === refreshToken) {
         // Generate a new access token
-        const { authentication, ...userWithoutAuth } = user.toObject()
+        const tokenPayload = createTokenPayload(user.toObject())
         const accessToken = jwt.sign(
-          userWithoutAuth,
+          tokenPayload,
           process.env.ACCESS_TOKEN_SECRET!,
           { expiresIn: '15m' }
         )
