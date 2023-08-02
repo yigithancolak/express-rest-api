@@ -1,7 +1,7 @@
-import mongoose from 'mongoose'
+import mongoose, { Types } from 'mongoose'
 
 export interface IUser {
-  _id: string
+  _id: Types.ObjectId
   username: string
   email: string
   authentication?: {
@@ -9,6 +9,7 @@ export interface IUser {
     accessToken?: string
     refreshToken?: string
   }
+  role: string
   createdAt: Date
   updatedAt: Date
 }
@@ -21,6 +22,7 @@ const UserSchema = new mongoose.Schema({
     accessToken: { type: String, select: false },
     refreshToken: { type: String, select: false }
   },
+  role: { type: String, default: 'user' },
   createdAt: { type: Date, default: () => Date.now(), immutable: true },
   updatedAt: { type: Date, default: () => Date.now() }
 })

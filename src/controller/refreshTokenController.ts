@@ -1,7 +1,8 @@
 import { config } from 'dotenv'
 import { Request, Response } from 'express'
-import jwt, { JwtPayload } from 'jsonwebtoken'
-import { getUserByEmail } from '../db/operations/userOperations'
+import jwt from 'jsonwebtoken'
+import { getUserById } from '../db/operations/userOperations'
+import { UserJWT } from '../helpers/jwtHelpers'
 
 config()
 
@@ -14,13 +15,13 @@ export const handleRefreshToken = async (req: Request, res: Response) => {
   jwt.verify(
     refreshToken,
     process.env.REFRESH_TOKEN_SECRET!,
-    async (err: Error, userPayload: JwtPayload) => {
+    async (err: Error, userPayload: UserJWT) => {
       if (err) {
         return res.sendStatus(403)
       }
 
       // Get the user from the database using the user ID from the payload
-      const user = await getUserByEmail(userPayload.email).select(
+      const user = await getUserById(userPayload.id).select(
         '+authentication.refreshToken'
       )
 
@@ -37,7 +38,7 @@ export const handleRefreshToken = async (req: Request, res: Response) => {
         return res.status(200).json({ success: true, accessToken })
       } else {
         return res
-          .status(403)
+          .status(400)
           .json({ success: false, message: 'Invalid token' })
       }
     }

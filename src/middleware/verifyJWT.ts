@@ -1,11 +1,12 @@
 import { config } from 'dotenv'
 import { NextFunction, Request, Response } from 'express'
-import jwt, { JwtPayload } from 'jsonwebtoken'
+import jwt from 'jsonwebtoken'
+import { UserJWT } from '../helpers/jwtHelpers'
 
 config()
 
 export interface RequestWithUser extends Request {
-  user: JwtPayload
+  user: UserJWT
 }
 
 export const verifyJWT = (
@@ -14,14 +15,15 @@ export const verifyJWT = (
   next: NextFunction
 ) => {
   const authHeader = req.headers['authorization']
-  if (!authHeader) return res.sendStatus(401)
+  if (!authHeader || !authHeader.startsWith('Bearer '))
+    return res.sendStatus(401)
   const token = authHeader.split(' ')[1]
   jwt.verify(
     token,
     process.env.ACCESS_TOKEN_SECRET!,
-    (err, user: JwtPayload) => {
+    (err, jwtPayload: UserJWT) => {
       if (err) return res.sendStatus(403) //invalid token
-      req.user = user
+      req.user = jwtPayload
       next()
     }
   )

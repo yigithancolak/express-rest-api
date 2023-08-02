@@ -4,6 +4,7 @@ import { Request, Response } from 'express'
 import jwt from 'jsonwebtoken'
 import { createUser, getUserByEmail } from '../db/operations/userOperations'
 import { hashPassword } from '../helpers'
+import createTokenPayload from '../helpers/jwtHelpers'
 
 config()
 
@@ -60,13 +61,17 @@ export const handleLoginUser = async (req: Request, res: Response) => {
         .json({ success: false, message: 'Invalid credentials' })
 
     //toObject() for document --> object
-    const userObject = user.toObject()
+    const tokenPayload = createTokenPayload(user.toObject())
     //tokens
-    const accessToken = jwt.sign(userObject, process.env.ACCESS_TOKEN_SECRET, {
-      expiresIn: '15m'
-    })
+    const accessToken = jwt.sign(
+      tokenPayload,
+      process.env.ACCESS_TOKEN_SECRET,
+      {
+        expiresIn: '15m'
+      }
+    )
     const refreshToken = jwt.sign(
-      userObject,
+      tokenPayload,
       process.env.REFRESH_TOKEN_SECRET,
       { expiresIn: '30d' }
     )
@@ -78,13 +83,13 @@ export const handleLoginUser = async (req: Request, res: Response) => {
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production', // set to true if in a production environment
-      sameSite: 'strict', // or 'lax' depending on your needs
+      sameSite: 'none',
       maxAge: 30 * 24 * 60 * 60 * 1000 // cookie expiration in milliseconds
     })
 
     return res.status(200).json({
       success: true,
-      data: { ...userObject, authentication: { accessToken, refreshToken } }
+      data: { ...user.toObject(), authentication: { accessToken } }
     })
   } catch (error) {
     res.status(500).json(error.message)

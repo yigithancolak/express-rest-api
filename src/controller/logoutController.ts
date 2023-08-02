@@ -1,8 +1,8 @@
 import { config } from 'dotenv'
 import { Response } from 'express'
 import jwt from 'jsonwebtoken'
-import { IUser } from '../db/models/user'
-import { getUserByEmail } from '../db/operations/userOperations'
+import { getUserById } from '../db/operations/userOperations'
+import { UserJWT } from '../helpers/jwtHelpers'
 import { RequestWithUser } from '../middleware/verifyJWT'
 
 config()
@@ -12,9 +12,9 @@ export const handleLogout = async (req: RequestWithUser, res: Response) => {
 
   if (!refreshToken) return res.sendStatus(204) //no content
 
-  const user = jwt.decode(refreshToken) as IUser
+  const user = jwt.decode(refreshToken) as UserJWT
 
-  const foundUser = await getUserByEmail(user.email).select(
+  const foundUser = await getUserById(user.id).select(
     '+authentication.refreshToken'
   )
   if (!foundUser) {
