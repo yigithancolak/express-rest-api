@@ -4,5 +4,6 @@ import { verifyJWT } from '../middleware/verifyJWT'
 import { verifyRole } from '../middleware/verifyRole'
 
 export default (router: express.Router) => {
-  router.get('/users', verifyJWT, verifyRole('user'), handleGetAllUsers)
+  router.use(verifyJWT, verifyRole(['admin']))
+  router.get('/users', handleGetAllUsers)
 }

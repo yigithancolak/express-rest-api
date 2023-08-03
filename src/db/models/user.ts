@@ -1,32 +1,35 @@
 import mongoose, { Types } from 'mongoose'
+import { IAuthentication, authSchema } from './authSchema'
 
-export type RolesType = 'user' | 'admin'
+export type RolesType = 'instructor' | 'editor' | 'admin' | 'organization'
 
 export interface IUser {
   _id: Types.ObjectId
-  username: string
+  name: string
   email: string
-  authentication?: {
-    password?: string
-    accessToken?: string
-    refreshToken?: string
-  }
-  role: RolesType
+  authentication: IAuthentication
+  roles: RolesType[]
+  organizationId: Types.ObjectId // Linked to Organization
   createdAt: Date
   updatedAt: Date
 }
 
 const userSchema = new mongoose.Schema({
-  username: { type: String, required: true },
+  name: { type: String, required: true },
   email: { type: String, required: true },
-  authentication: {
-    password: { type: String, required: true, select: false },
-    accessToken: { type: String, select: false },
-    refreshToken: { type: String, select: false }
+  authentication: authSchema,
+  roles: {
+    type: [String],
+    enum: ['instructor', 'editor', 'admin', 'organization'],
+    default: ['organization'],
+    required: true
   },
-  role: { type: String, enum: ['user', 'admin'], default: 'user' },
+  organizationId: {
+    type: Types.ObjectId,
+    ref: 'User'
+  },
   createdAt: { type: Date, default: () => Date.now(), immutable: true },
   updatedAt: { type: Date, default: () => Date.now() }
 })
 
-export const UserModel = mongoose.model('User', userSchema)
+export const UserModel = mongoose.model<IUser>('User', userSchema)

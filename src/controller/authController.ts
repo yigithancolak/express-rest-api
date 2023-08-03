@@ -7,9 +7,9 @@ import createTokenPayload from '../helpers/jwtHelpers'
 
 export const handleRegisterUser = async (req: Request, res: Response) => {
   try {
-    const { email, password, username } = req.body
+    const { email, password, name, roles, createdBy } = req.body
 
-    if (!email || !password || !username) {
+    if (!email || !password || !name) {
       return res
         .status(400)
         .json({ error: 'Email, password and username are required' })
@@ -23,10 +23,12 @@ export const handleRegisterUser = async (req: Request, res: Response) => {
 
     const user = await createUser({
       email,
-      username,
+      name,
       authentication: {
         password: await hashPassword(password)
-      }
+      },
+      roles,
+      createdBy
     })
 
     return res.status(200).json({ success: true, data: user })
@@ -82,6 +84,8 @@ export const handleLoginUser = async (req: Request, res: Response) => {
       secure: process.env.NODE_ENV === 'production', // set to true if in a production environment
       sameSite: 'none',
       maxAge: 30 * 24 * 60 * 60 * 1000 // cookie expiration in milliseconds
+
+      //todo: path+domain
     })
 
     return res.status(200).json({

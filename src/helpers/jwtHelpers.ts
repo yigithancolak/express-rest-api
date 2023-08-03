@@ -5,13 +5,13 @@ import { IUser } from '../db/models/User'
 
 export type UserJWT = {
   id: Types.ObjectId
-  role: string
+  roles: string[]
 }
 
 export const createTokenPayload = (user: IUser): UserJWT => {
   return {
     id: user._id,
-    role: user.role // Assuming role is defined in your IUser interface
+    roles: user.roles
   }
 }
 

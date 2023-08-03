@@ -19,9 +19,13 @@ export const handleLogout = async (req: RequestWithUser, res: Response) => {
     return res.sendStatus(204)
   }
 
-  foundUser.authentication.refreshToken = null
+  foundUser.authentication.refreshToken = ''
   await foundUser.save()
 
-  res.clearCookie('refreshToken', { httpOnly: true })
+  res.clearCookie('refreshToken', {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production'
+    //todo: path + domain
+  })
   return res.sendStatus(204) // No content
 }
