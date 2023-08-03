@@ -10,6 +10,7 @@ export interface IUser {
   authentication: IAuthentication
   roles: RolesType[]
   organizationId: Types.ObjectId // Linked to Organization
+  groups?: Types.ObjectId[] // Linked to Group (for instructors)
   createdAt: Date
   updatedAt: Date
 }
@@ -24,6 +25,12 @@ const userSchema = new mongoose.Schema({
     default: ['organization'],
     required: true
   },
+  groups: [
+    {
+      type: Types.ObjectId,
+      ref: 'Group'
+    }
+  ],
   organizationId: {
     type: Types.ObjectId,
     ref: 'User'
