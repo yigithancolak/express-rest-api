@@ -10,33 +10,33 @@ export interface IUser {
   authentication: IAuthentication
   roles: RolesType[]
   organizationId: Types.ObjectId // Linked to Organization
-  groups?: Types.ObjectId[] // Linked to Group (for instructors)
   createdAt: Date
   updatedAt: Date
 }
 
-const userSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  email: { type: String, required: true },
-  authentication: authSchema,
-  roles: {
-    type: [String],
-    enum: ['instructor', 'editor', 'admin', 'organization'],
-    default: ['organization'],
-    required: true
-  },
-  groups: [
-    {
+const userSchema = new mongoose.Schema(
+  {
+    name: { type: String, required: true },
+    email: { type: String, required: true },
+    authentication: authSchema,
+    roles: {
+      type: [String],
+      enum: ['instructor', 'editor', 'admin', 'organization'],
+      default: ['organization'],
+      required: true
+    },
+    organizationId: {
       type: Types.ObjectId,
-      ref: 'Group'
+      ref: 'User',
+      default: function () {
+        const schema = this as IUser
+        return schema._id
+      }
     }
-  ],
-  organizationId: {
-    type: Types.ObjectId,
-    ref: 'User'
   },
-  createdAt: { type: Date, default: () => Date.now(), immutable: true },
-  updatedAt: { type: Date, default: () => Date.now() }
-})
+  {
+    timestamps: true
+  }
+)
 
 export const UserModel = mongoose.model<IUser>('User', userSchema)

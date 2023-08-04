@@ -1,28 +1,37 @@
 import { NextFunction, Response } from 'express'
-import { getGroupsByInstructor } from '../db/operations/groupOperations'
-import { RequestWithUser } from './verifyJWT'
+import { getGroupById } from '../db/operations/groupOperations'
+import { RequestWithFoundGroup } from '../types/requestTypes'
 
 export const verifyGroupOwnership = async (
-  req: RequestWithUser,
+  req: RequestWithFoundGroup,
   res: Response,
   next: NextFunction
 ) => {
+  const { organizationId } = req.user
+  const groupId = req.params.id
+
+  if (!groupId)
+    return res
+      .status(400)
+      .json({ success: false, message: 'Id parameter is required in url' })
+
   try {
-    const groupId = req.params.id
-    const groups = await getGroupsByInstructor(req.user.id)
+    const foundGroup = await getGroupById(groupId)
 
-    if (!groups.some((group) => group._id.toString() === groupId)) {
-      return res.status(403).json({
+    if (!foundGroup)
+      return res
+        .status(404)
+        .json({ success: false, message: 'Group has not found' })
+
+    if (foundGroup.organizationId.toString() !== organizationId.toString())
+      return res.status(400).json({
         success: false,
-        message: 'Not authorized to access this group'
+        message: 'Not permitted for accessing that group'
       })
-    }
 
+    req.foundGroup = foundGroup
     next()
   } catch (error) {
-    console.error(error) // Log the error
-    res
-      .status(500)
-      .json({ success: false, message: 'An unexpected error occurred' })
+    res.status(500).json({ success: false, message: error.message })
   }
 }

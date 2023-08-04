@@ -1,5 +1,4 @@
 import express from 'express'
-import { verifyJWT } from '../middleware/verifyJWT'
 import authentication from './auth'
 import groups from './groups'
 import refresh from './refresh'
@@ -11,7 +10,6 @@ export default (): express.Router => {
   authentication(router)
   refresh(router)
 
-  router.use(verifyJWT)
   users(router)
   groups(router)
 

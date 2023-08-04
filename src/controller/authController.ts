@@ -2,8 +2,8 @@ import bcrypt from 'bcrypt'
 import { Request, Response } from 'express'
 import jwt from 'jsonwebtoken'
 import { createUser, getUserByEmail } from '../db/operations/userOperations'
-import { hashPassword } from '../helpers'
 import createTokenPayload from '../helpers/jwtHelpers'
+import { hashPassword } from '../helpers/passwordHelpers'
 
 export const handleRegisterUser = async (req: Request, res: Response) => {
   try {
@@ -27,8 +27,7 @@ export const handleRegisterUser = async (req: Request, res: Response) => {
       authentication: {
         password: await hashPassword(password)
       },
-      roles,
-      createdBy
+      roles
     })
 
     return res.status(200).json({ success: true, data: user })

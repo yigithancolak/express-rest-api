@@ -2,7 +2,7 @@ import { Response } from 'express'
 import jwt from 'jsonwebtoken'
 import { getUserById } from '../db/operations/userOperations'
 import { UserJWT } from '../helpers/jwtHelpers'
-import { RequestWithUser } from '../middleware/verifyJWT'
+import { RequestWithUser } from '../types/requestTypes'
 
 export const handleLogout = async (req: RequestWithUser, res: Response) => {
   const refreshToken = req.cookies?.refreshToken

@@ -1,10 +1,7 @@
-import { NextFunction, Request, Response } from 'express'
+import { NextFunction, Response } from 'express'
 import jwt from 'jsonwebtoken'
 import { UserJWT } from '../helpers/jwtHelpers'
-
-export interface RequestWithUser extends Request {
-  user: UserJWT
-}
+import { RequestWithUser } from '../types/requestTypes'
 
 export const verifyJWT = (
   req: RequestWithUser,
