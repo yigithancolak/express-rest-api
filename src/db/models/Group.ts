@@ -17,7 +17,19 @@ const groupSchema = new mongoose.Schema({
     type: Types.ObjectId,
     ref: 'User'
   },
-  day: { type: String, required: true },
+  day: {
+    type: String,
+    enum: [
+      'monday',
+      'tuesday',
+      'wednesday',
+      'thursday',
+      'friday',
+      'saturday',
+      'sunday'
+    ],
+    required: true
+  },
   time: {
     type: String,
     required: true,

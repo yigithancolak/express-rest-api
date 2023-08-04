@@ -1,5 +1,5 @@
 import { Types } from 'mongoose'
-import { GroupModel } from '../models/Group'
+import { GroupModel, IGroup } from '../models/Group'
 
 export const getGroups = (instructorId: Types.ObjectId) => {
   return GroupModel.find({ instructorId: instructorId })
@@ -8,7 +8,7 @@ export const getGroups = (instructorId: Types.ObjectId) => {
 export const getGroupById = (id: string) => {
   return GroupModel.findOne({ _id: id })
 }
-export const createGroup = (values: Record<string, any>) =>
+export const createGroup = (values: Partial<IGroup>) =>
   new GroupModel(values).save().then((group) => group.toObject())
 
 export const deleteUserById = (id: string) =>
