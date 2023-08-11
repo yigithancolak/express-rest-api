@@ -5,13 +5,21 @@ export const getUsers = () => UserModel.find()
 
 export const getUserByEmail = (email: string) => UserModel.findOne({ email })
 
-export const getUserByOrganizationId = (organizationId: Types.ObjectId) =>
-  UserModel.findOne({ organizationId })
+export const getUserByRefreshToken = (refreshToken: string) =>
+  UserModel.findOne({ 'authentication.refreshToken': refreshToken })
 
-export const getSessionToken = (sessionToken: string) =>
-  UserModel.findOne({
-    'authentication.sessionToken': sessionToken
-  })
+export const getUsersByOrganizationId = (organizationId: Types.ObjectId) =>
+  UserModel.find({ organizationId }).exec()
+
+export const getFilteredUsersByRole = (
+  organizationId: Types.ObjectId,
+  role: string
+) => {
+  return UserModel.find({
+    organizationId,
+    roles: { $in: [role] }
+  }).exec()
+} //need test
 
 export const getUserById = (id: Types.ObjectId) => {
   return UserModel.findOne({ _id: id })

@@ -6,7 +6,7 @@ import { GroupModel, IGroup } from '../models/Group'
 // }
 
 export const getGroupById = (id: string) => {
-  return GroupModel.findOne({ _id: id })
+  return GroupModel.findOne({ _id: id }).populate('instructorId').exec()
 }
 export const createGroup = (values: Partial<IGroup>) =>
   new GroupModel(values).save().then((group) => group.toObject())
@@ -22,5 +22,5 @@ export const getGroupsOfInstructor = (instructorId: Types.ObjectId) => {
 }
 
 export const getGroupsOfOrganization = (organizationId: Types.ObjectId) => {
-  return GroupModel.find({ organizationId })
+  return GroupModel.find({ organizationId }).populate('instructorId').exec()
 }

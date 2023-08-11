@@ -19,7 +19,8 @@ export const handleLogout = async (req: RequestWithUser, res: Response) => {
     return res.sendStatus(204)
   }
 
-  foundUser.authentication.refreshToken = ''
+  foundUser.authentication.refreshToken =
+    foundUser.authentication.refreshToken.filter((rt) => rt !== refreshToken)
   await foundUser.save()
 
   res.clearCookie('refreshToken', {

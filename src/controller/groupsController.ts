@@ -13,19 +13,18 @@ export const handleCreateGroup = async (
   req: RequestWithUser,
   res: Response
 ) => {
-  const { name, day, time } = req.body
+  const { name, schedules } = req.body as Partial<IGroup>
   const { organizationId } = req.user
 
-  if (!name || !day || !time)
+  if (!name || !schedules)
     return res
       .status(400)
-      .json({ success: false, message: 'Name, day and time required' })
+      .json({ success: false, message: 'Name and schedules required' })
 
   try {
     const newGroup = await createGroup({
       name,
-      day,
-      time,
+      schedules,
       organizationId
     })
     res.status(201).json({ success: true, data: newGroup })
@@ -86,7 +85,6 @@ export const handleDeleteGroup = async (
   res: Response
 ) => {
   const { id } = req.params
-  const updatedFields = req.body as Partial<IGroup>
   if (!id)
     return res
       .status(400)
@@ -102,9 +100,10 @@ export const handleDeleteGroup = async (
 
     const deletedGroup = await deleteGroupById(id)
 
-    return res
-      .status(200)
-      .json({ success: true, message: 'Group has been deleted' })
+    return res.status(200).json({
+      success: true,
+      message: `Group with _id:${deletedGroup._id}, has been deleted`
+    })
   } catch (error) {
     return res.status(500).json({ success: false, message: error.message })
   }

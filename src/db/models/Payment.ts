@@ -5,7 +5,6 @@ const paymentSchema = new mongoose.Schema({
   amount: { type: Number, required: true },
   date: { type: Date, default: Date.now },
   method: { type: String, enum: ['credit', 'debit', 'cash'], required: true }
-  // Additional fields as needed
 })
 
 export const PaymentModel = mongoose.model('Payment', paymentSchema)
