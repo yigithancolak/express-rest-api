@@ -21,8 +21,7 @@ const customerSchema = new mongoose.Schema(
     groupIds: [
       {
         type: Types.ObjectId,
-        ref: 'Group',
-        required: [true, 'Group is required']
+        ref: 'Group'
       }
     ],
     organizationId: {

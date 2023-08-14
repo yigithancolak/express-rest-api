@@ -6,7 +6,12 @@ import {
 import { handleLogout } from '../controller/logoutController'
 
 export default (router: express.Router) => {
-  router.post('/auth/register', handleRegisterUser)
-  router.post('/auth/login', handleLoginUser)
-  router.post('/auth/logout', handleLogout)
+  const authRouter = express.Router()
+
+  authRouter.post('/register', handleRegisterUser)
+  authRouter.post('/login', handleLoginUser)
+  authRouter.post('/logout', handleLogout)
+
+  // Attach the authRouter to the main router
+  router.use('/auth', authRouter)
 }

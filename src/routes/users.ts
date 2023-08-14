@@ -7,8 +7,13 @@ import { verifyJWT } from '../middleware/verifyJWT'
 import { verifyRole } from '../middleware/verifyRole'
 
 export default (router: express.Router) => {
-  router.use('/users', verifyJWT)
-  router.use('/users', verifyRole(['admin', 'organization']))
-  router.get('/users', handleGetAllUsers)
-  router.post('/users', handleCreateUserForOrganization)
+  const usersRouter = express.Router()
+
+  usersRouter.use(verifyJWT)
+  usersRouter.use(verifyRole(['admin', 'organization']))
+
+  usersRouter.get('/', handleGetAllUsers)
+  usersRouter.post('/', handleCreateUserForOrganization)
+
+  router.use('/users', usersRouter)
 }

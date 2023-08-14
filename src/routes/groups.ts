@@ -9,17 +9,24 @@ import {
 import { verifyGroupOwnership } from '../middleware/verifyGroupOwnership'
 import { verifyJWT } from '../middleware/verifyJWT'
 import { verifyRole } from '../middleware/verifyRole'
+import { handleGetCustomersForGroup } from '../controller/customersController'
 
 export default (router: express.Router) => {
-  router.use(
-    '/groups',
-    verifyJWT,
-    verifyRole(['admin', 'editor', 'organization'])
-  )
-  router.get('/groups', handleGetGroupsOfOrganization)
-  router.post('/groups', handleCreateGroup)
+  const groupRouter = express.Router()
 
-  router.get('/groups/:id', verifyGroupOwnership, handleGetOneGroup)
-  router.patch('/groups/:id', verifyGroupOwnership, handleUpdateGroup)
-  router.delete('/groups/:id', verifyGroupOwnership, handleDeleteGroup)
+  // Apply common middleware for all group routes
+  groupRouter.use(verifyJWT, verifyRole(['admin', 'editor', 'organization']))
+
+  groupRouter.get('/', handleGetGroupsOfOrganization)
+  groupRouter.post('/', handleCreateGroup)
+
+  groupRouter.use('/:id', verifyGroupOwnership)
+  groupRouter.get('/:id', handleGetOneGroup)
+  groupRouter.patch('/:id', handleUpdateGroup)
+  groupRouter.delete('/:id', handleDeleteGroup)
+
+  groupRouter.get('/:id/customers', handleGetCustomersForGroup)
+
+  // Attach the groupRouter to the main router
+  router.use('/groups', groupRouter)
 }
