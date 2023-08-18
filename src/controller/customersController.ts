@@ -1,9 +1,14 @@
 import { Response } from 'express'
-import { RequestWithFoundGroup, RequestWithUser } from '../types/requestTypes'
+import {
+  RequestWithFoundCustomer,
+  RequestWithFoundGroup,
+  RequestWithUser
+} from '../types/requestTypes'
 import {
   createCustomer,
   getCustomerByPhoneNumber,
-  getCustomersByGroupId
+  getCustomersByGroupId,
+  updateCustomerById
 } from '../db/operations/customerOperations'
 import { ICustomer } from '../db/models/Customer'
 
@@ -66,4 +71,34 @@ export const handleCreateCustomer = async (
   })
 
   return res.status(201).json({ success: true, data: newCustomer })
+}
+
+export const handleGetOneCustomer = (
+  req: RequestWithFoundCustomer,
+  res: Response
+) => {
+  return res.status(200).json({ success: true, data: req.foundCustomer })
+}
+
+export const handleDeleteCustomer = (
+  req: RequestWithFoundCustomer,
+  res: Response
+) => {
+  return res.status(200).json({
+    success: true,
+    message: `Group with _id:${req.foundCustomer._id}, has been deleted`
+  })
+}
+
+export const handleUpdateCustomer = async (
+  req: RequestWithFoundCustomer,
+  res: Response
+) => {
+  const updatedValues = req.body as Partial<ICustomer>
+  const customerId = req.foundCustomer._id
+  const updatedCustomer = await updateCustomerById(
+    customerId.toString(),
+    updatedValues
+  )
+  return res.status(200).json({ success: true, data: updatedCustomer })
 }

@@ -7,7 +7,11 @@ import {
   getGroupsOfOrganization,
   updateGroupById
 } from '../db/operations/groupOperations'
-import { RequestWithFoundGroup, RequestWithUser } from '../types/requestTypes'
+import {
+  RequestWithFoundCustomer,
+  RequestWithFoundGroup,
+  RequestWithUser
+} from '../types/requestTypes'
 
 export const handleCreateGroup = async (
   req: RequestWithUser,
