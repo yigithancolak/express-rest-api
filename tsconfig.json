@@ -4,9 +4,10 @@
     "resolveJsonModule": true,
     "moduleResolution": "node",
     "outDir": "./dist",
-    "sourceMap": true,
+    "sourceMap": false,
     "forceConsistentCasingInFileNames": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "rootDir": "./src"
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules"]
