@@ -4,8 +4,7 @@
     "resolveJsonModule": true,
     "moduleResolution": "node",
     "outDir": "./dist",
-    "sourceMap": true,
-    "noImplicitAny": true
+    "sourceMap": true
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules"]
