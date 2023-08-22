@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "module": "NodeNext",
+    "module": "CommonJS",
     "resolveJsonModule": true,
     "moduleResolution": "node",
     "outDir": "./dist",
