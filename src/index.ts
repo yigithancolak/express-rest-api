@@ -22,7 +22,7 @@ app.use(cookieParser())
 app.use(express.urlencoded({ extended: false }))
 app.use(morgan('dev'))
 app.use(express.json())
-// app.use(cors(corsOptions))
+app.use(cors(corsOptions))
 
 app.get('/', (req: Request, res: Response) => {
   res.send('INFO :: Root route called')
