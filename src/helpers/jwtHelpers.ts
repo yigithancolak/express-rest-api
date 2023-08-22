@@ -1,5 +1,3 @@
-// const tokenPayload = { id: user._id, role: user.role }; // Customize based on your needs
-
 import { Types } from 'mongoose'
 import { IUser } from '../db/models/User'
 
