@@ -1,6 +1,10 @@
 import { CorsOptions } from 'cors'
 
-const whitelist = ['www.mydeploymentlink.com', 'http://localhost:8888']
+const whitelist = [
+  'www.mydeploymentlink.com',
+  'http://localhost:8888',
+  'http://localhost:3000'
+]
 
 export const corsOptions: CorsOptions = {
   origin: (origin, callback) => {

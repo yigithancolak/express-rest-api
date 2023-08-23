@@ -1,7 +1,6 @@
 {
   "compilerOptions": {
     "module": "CommonJS",
-    "resolveJsonModule": true,
     "moduleResolution": "node",
     "outDir": "./dist",
     "sourceMap": false,
