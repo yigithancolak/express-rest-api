@@ -1,11 +1,12 @@
 import { Response } from 'express'
-import { RequestWithUser } from '../types/requestTypes'
+import { Types } from 'mongoose'
+import { IPayment } from '../db/models/Payment'
 import {
+  PaymentFilters,
   createPayment,
-  getPaymentById,
   getPaymentsByOrganization
 } from '../db/operations/paymentOperations'
-import { IPayment } from '../db/models/Payment'
+import { RequestWithUser } from '../types/requestTypes'
 
 export const handleCreatePayments = async (
   req: RequestWithUser,
@@ -38,9 +39,27 @@ export const handleGetPaymentsOfOrganization = async (
   res: Response
 ) => {
   const { organizationId } = req.user
+  const { groupId, customerId, startDate, endDate } = req.query
+
+  // Convert query params into PaymentFilters type
+  const filters: PaymentFilters = {
+    organizationId,
+    groupId: groupId ? new Types.ObjectId(groupId as string) : undefined,
+    customerId: customerId
+      ? new Types.ObjectId(customerId as string)
+      : undefined
+  }
+
+  if (startDate) {
+    filters.startDate = new Date(startDate as string)
+  }
+
+  if (endDate) {
+    filters.endDate = new Date(endDate as string)
+  }
 
   try {
-    const allPayments = await getPaymentsByOrganization(organizationId)
+    const allPayments = await getPaymentsByOrganization(filters)
     res.status(200).json({ success: true, data: allPayments })
   } catch (error) {
     res.status(500).json({ success: false, message: error.message })
